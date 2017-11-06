@@ -14,6 +14,7 @@
                 <div class="navbar navbar-dark bg-dark">
                     <div class="container d-flex justify-content-between">
                         <a href="<?php echo site_url(); ?>" class="navbar-brand">Activity Feed Notification System</a>
+                        <a href="<?php echo site_url('activity/manage'); ?>" class="btn btn-primary">Manage</a>
                     </div>
                 </div>
             </header>
