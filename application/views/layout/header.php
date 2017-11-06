@@ -29,7 +29,7 @@
                                         <?php foreach($activities as $activity) { ?>
                                             <div class="list-group-item list-group-item-action flex-column align-items-start">
                                                 <p class="mb-1"><?php echo $activity['activity_text']; ?></p>
-                                                <small class="text-muted"><?php echo time_elapsed_string(strtotime($activity['added_on'])); ?></small>
+                                                <small class="text-muted"><?php echo ago(strtotime($activity['added_on'])); ?></small>
                                             </div>
                                         <?php } ?>
                                     <?php else: ?>
