@@ -2,12 +2,12 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * Location
+ * Activity
  *
  * @author 	Yash Desai
  * @link   	https://github.com/yashdesai87/activity-feed-notification-system
  */
-class Activity extends CI_Controller {
+class Activity extends BaseController {
 
 	/**
 	 * Init

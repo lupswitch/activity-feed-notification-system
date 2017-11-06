@@ -109,4 +109,173 @@ class Activity_model extends CI_Model {
 		return $this->db->update('activity_types', $activity_type_data, array('id' => $activity_type_id));
 	}
 
+	/**
+	 * Fetch all the user activities
+	 *
+	 * @param  integer $user_id (id of current user)
+	 *         integer $limit (limit activities per page)
+	 *         integer $offset (offset for the activities)
+	 *         string  $order_by (set the order of the activities)
+	 *         array   $params (set optional parameters to filter from)
+	 *         
+	 * @return  array (Returns data all the user activities)
+	 */
+    public function get_all_activities($user_id, $limit = 0, $offset = 0, $order_by = 'a.id', $params = array())
+    {
+        $limit_condition = "";
+
+        if($limit && $offset) 
+        {
+            $limit_condition = " LIMIT " . $offset . ", " . $limit;
+        } 
+        else if($limit) 
+        {
+            $limit_condition = " LIMIT " . $limit;
+        }
+
+        $is_read_condition = "";
+        if(isset($params['is_read']))
+        {
+        	$is_read_condition = " AND a.is_read = " . (int)$params['is_read'];
+        }
+
+        $sql = "
+            SELECT
+                a.*,
+                u1.first_name as from_user_first_name,
+                u1.last_name as from_user_last_name,
+                CONCAT(u1.first_name,' ', u1.last_name) as from_user_name,
+                u2.first_name as to_user_first_name,
+                u2.last_name as to_user_last_name,
+                CONCAT(u2.first_name,' ', u2.last_name) as to_user_name,
+                at.text as activity_text
+            FROM
+                activities a
+                    LEFT JOIN users u1 ON a.from_user_id = u1.id
+                    LEFT JOIN users u2 ON a.to_user_id = u2.id
+                    LEFT JOIN activity_types at ON a.activity_type_id = at.id
+            WHERE
+                1 = 1
+            AND 
+                u2.id = ?
+            $is_read_condition
+            ORDER BY
+	            $order_by
+	            $limit_condition
+        ";
+
+        $activities = $this->db->query($sql, array($user_id))->result_array();
+
+        if(!empty($activities))
+        {
+            foreach($activities as $key => $activity)
+            {
+                $activities[$key]['activity_text'] = $this->_build_activity_text($activity);
+            }
+        }
+
+        return $activities;
+    }
+
+    /**
+	 * Count all user activities
+	 *
+	 * @param  integer $user_id (id of current user)
+	 * @return  array (Returns data all the user activities)
+	 */
+    public function count_all_activities($user_id)
+    {
+        $sql = "
+            SELECT
+                a.id
+            FROM
+                activities a
+                    LEFT JOIN users u ON a.to_user_id = u.id
+            WHERE
+                1 = 1
+            AND 
+                u.id = ?
+        ";
+
+        return count($this->db->query($sql, array($user_id))->result_array());
+    }
+
+   /**
+	 * Count all user unread activities
+	 *
+	 * @param  integer $user_id (retrieve unread activities for a specific user)
+	 * @return  array (Returns data all the user activities)
+	 */
+    public function count_all_unread_activities($user_id)
+    {
+        $sql = "
+            SELECT
+                a.id
+            FROM
+                activities a
+                    LEFT JOIN users u ON a.to_user_id = u.id
+            WHERE
+                1 = 1
+            AND
+                a.is_read = 0
+            AND 
+                u.id = ?
+        ";
+
+        return count($this->db->query($sql, array($user_id))->result_array());
+    }
+
+    /**
+	 * Build the activity text based on the templates set
+	 *
+	 * @param  array $activity_data (complete activity data in db)
+	 * @return  string (Returns string parsed from activitity template)
+	 */
+    private function _build_activity_text($activity_data)
+    {
+        $activity_text = $activity_data['activity_text'];
+
+        // add predefined tags
+        $tags = array(
+            'sender-first-name' => $activity_data['from_user_first_name'],
+            'sender-last-name' => $activity_data['from_user_last_name'],
+            'sender-full-name' => $activity_data['from_user_name'],
+            'receipient-first-name' => $activity_data['to_user_first_name'],
+            'receipient-last-name' => $activity_data['to_user_last_name'],
+            'receipient-full-name' => $activity_data['to_user_name'],
+        );
+
+        $other_tags = @unserialize($activity_data['other_activity_data']);
+
+        if(!empty($other_tags))
+        {
+            $tags = array_merge($tags, $other_tags);
+        }
+
+        foreach ($tags as $oldtext => $newtext) {
+            $xoldtext = mb_ereg_replace(' ', '_', $oldtext);
+            $xoldtext = '{'.strtolower($xoldtext).'}';
+            $activity_text = mb_ereg_replace($xoldtext, $newtext, $activity_text);
+        }
+
+        $activity_text = mb_ereg_replace('{{([A-z0-9 _]*)}}', '', $activity_text);
+
+        return $activity_text;
+    }
+
+	/**
+	 * Mark all unread activities for a user as read
+	 *
+	 * @param  integer $user_id (id of current user)
+	 * @return  boolean
+	 */
+	public function mark_all_activities_as_read($user_id)
+    {
+        $data = array(
+            'is_read' => 1
+        );
+        $this->db->where('to_user_id', $user_id);
+        return $this->db->update('activities', $data);
+    }
+
 }

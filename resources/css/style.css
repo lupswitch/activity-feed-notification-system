@@ -1,0 +1,29 @@
+/*
+ * Notification box CSS
+ */
+.notification-ico:hover {
+    opacity: .85;
+}
+#notification-box {
+	padding: 0;
+    width: 400px;
+    border: none;
+}
+#notification-box .list-group {
+	border: 1px solid rgba(0,0,0,.125);
+	border-bottom: none;
+	max-height: 385px;
+	min-height: 75px;
+}
+#notification-box .list-group .list-group-item {
+    border-left: none;
+    border-right: none;
+}
+#notification-box .list-group .list-group-item:first-child {
+    border-top: none;
+}
+#notification-box .list-group .list-group-item:last-child {
+	border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: none;
+}
