@@ -1,7 +1,7 @@
 <section class="jumbotron text-center mb-4">
     <div class="container">
         <h1 class="display-4">Manage System Activities</h1>
-        <p class="lead text-muted">Add / edit / delete system activities</p>
+        <p class="lead text-muted">Add / edit the system activities</p>
         <p>
             <a href="<?php echo site_url('activity/add'); ?>" class="btn btn-primary">Add Activity</a>
         </p>
