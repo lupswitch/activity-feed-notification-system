@@ -8,7 +8,6 @@
 
             <!-- Bootstrap CSS -->
             <link rel="stylesheet" href="<?php echo base_url('resources/css/bootstrap.min.css'); ?>">
-            <link rel="stylesheet" href="<?php echo base_url('resources/css/style.css'); ?>">
         </head>
         <body>
             <header>
