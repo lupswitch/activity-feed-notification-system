@@ -228,9 +228,9 @@ class Activity_model extends CI_Model {
     }
 
     /**
-	 * Add a new activity for user
+	 * Add a new activity for a single user / multiple users
 	 *
-	 * @param  integer $to_user_id (id of the user for whom activity is added)
+	 * @param  integer / array $to_user_id (id of the user / array containing ids of multiple users for whom activity is added)
 	 *         string $activity_type_slug (unique slug of the activity type)
 	 *         integer $from_user_id (id of the user who called the activity - 0 if the activity is performed by the system)
 	 *         array $other_activity_data (optional data containing custom tag values)
@@ -246,15 +246,46 @@ class Activity_model extends CI_Model {
 			return FALSE;
 		}
 
-		$activity_data = array(
-			'to_user_id' => $to_user_id,
-			'activity_type_id' => $activity_type['id'],
-			'from_user_id' => $from_user_id,
-			'other_activity_data' => serialize($other_activity_data),
-			'added_on' => date('Y-m-d H:i:s')
-		);
+		$activity_data = array();
 
-		return $this->db->insert('activities', $activity_data);
+		if(is_array($to_user_id))
+		{
+			foreach($to_user_id as $t_id)
+			{
+				if(is_numeric($t_id))
+				{
+					$activity_data[] = array(
+						'to_user_id' => (int) $t_id,
+						'activity_type_id' => $activity_type['id'],
+						'from_user_id' => (int) $from_user_id,
+						'other_activity_data' => serialize($other_activity_data),
+						'added_on' => date('Y-m-d H:i:s')
+					);
+				}
+			}
+		}
+		else
+		{
+			if(is_numeric($to_user_id))
+			{
+				$activity_data[] = array(
+					'to_user_id' => (int) $to_user_id,
+					'activity_type_id' => $activity_type['id'],
+					'from_user_id' => (int) $from_user_id,
+					'other_activity_data' => serialize($other_activity_data),
+					'added_on' => date('Y-m-d H:i:s')
+				);
+			}
+		}
+
+		if(!empty($activity_data))
+		{
+			return $this->db->insert_batch('activities', $activity_data);
+		}
+		else
+		{
+			return FALSE;
+		}
 	}
 
 	/**

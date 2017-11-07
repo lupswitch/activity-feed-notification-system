@@ -1,4 +1,4 @@
-<section class="jumbotron text-center">
+<section class="jumbotron text-center mb-4">
     <div class="container">
         <h1 class="display-4">Activities (<?php echo $total_activity_count; ?>)</h1>
         <p class="lead text-muted">View all the recent activities</p>
