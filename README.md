@@ -14,7 +14,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ```
 $this->load->model('Activity_model');
-$this->Activity_model->add_user_activity(34, 'INVITE_USER', 45, array('user-email' => 'user1@example.com'));
+$this->Activity_model->add_user_activity($to_user_id, $activity_type_slug, $from_user_id, $other_activity_data);
 ```
 
 ## Built With
