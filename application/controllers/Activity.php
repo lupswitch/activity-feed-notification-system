@@ -160,6 +160,40 @@ class Activity extends BaseController {
 	}
 
 	/**
+	 * Delete an existing system activity
+	 *
+	 * @param  integer $activity_type_id (unique id of the activity type)
+	 * @return 	NULL
+	 */
+	public function delete($activity_type_id)
+	{
+		// check if activity type exists in db
+		// if not then redirect with error message
+		if(!$this->Activity_model->check_if_activity_type_is_valid($activity_type_id))
+		{
+			// set the success / error flash message
+			$this->session->set_flashdata('error_message', 'System activity not found');
+			redirect('activity/manage');
+			exit;
+		}
+
+		$delete_activity_type = $this->Activity_model->delete_activity_type($activity_type_id);
+
+		// set the success / error flash message
+		if($delete_activity_type == TRUE) 
+		{
+			$this->session->set_flashdata('success_message', 'System activity deleted successfully');
+		} 
+		else 
+		{
+			$this->session->set_flashdata('error_message', 'Error occured while deleting the location');
+		}
+
+		redirect('activity/manage');
+		exit;
+	}
+
+	/**
 	 * Check if slug exists
 	 *
 	 * @param  string $slug (unique string of the activity type)
@@ -332,4 +366,5 @@ class Activity extends BaseController {
 			$this->load->view('layout/basetemplate', $data);
 		}
 	}
+
 }

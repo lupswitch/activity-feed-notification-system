@@ -45,6 +45,7 @@
 							<td scope="row" class="text-center"><?php echo $activity['text']; ?></td>
 							<td scope="row" class="text-center">
 								<a href="<?php echo site_url('activity/edit/'.$activity['id']) ?>" class="btn btn-outline-warning btn-sm">Edit</a>
+								<a href="<?php echo site_url('activity/delete/'.$activity['id']) ?>" class="btn btn-outline-danger btn-sm">Delete</a>
 							</td>
 						</tr>
 					<?php endforeach; ?>

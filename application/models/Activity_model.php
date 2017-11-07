@@ -110,6 +110,17 @@ class Activity_model extends CI_Model {
 	}
 
 	/**
+	 * Delete an existing activity type
+	 *
+	 * @param  integer $activity_type_id (unique id of the activity type)
+	 * @return  boolean
+	 */
+	public function delete_activity_type($activity_type_id)
+	{
+		return $this->db->delete('activity_types', array('id' => $activity_type_id));
+	}
+
+	/**
 	 * Fetch all the user activities
 	 *
 	 * @param  integer $user_id (id of current user)
