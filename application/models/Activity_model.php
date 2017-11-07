@@ -170,6 +170,7 @@ class Activity_model extends CI_Model {
         {
             foreach($activities as $key => $activity)
             {
+            	// call the function to replace the tags with their respective values
                 $activities[$key]['activity_text'] = $this->_build_activity_text($activity);
             }
         }
@@ -246,12 +247,16 @@ class Activity_model extends CI_Model {
 			return FALSE;
 		}
 
-		$activity_data = array();
+		$activity_data = array(); // define an empty array
 
+		// check if $to_user_id is array or integer
+		// if array then loop through each and build activity data array
+		// else just push single array to calling insert batch on the table
 		if(is_array($to_user_id))
 		{
 			foreach($to_user_id as $t_id)
 			{
+				// add only if id is numeric
 				if(is_numeric($t_id))
 				{
 					$activity_data[] = array(
@@ -266,6 +271,7 @@ class Activity_model extends CI_Model {
 		}
 		else
 		{
+			// add only if id is numeric
 			if(is_numeric($to_user_id))
 			{
 				$activity_data[] = array(
@@ -278,6 +284,8 @@ class Activity_model extends CI_Model {
 			}
 		}
 
+		// if activity data is present to be inserted
+		// else directly return FALSE
 		if(!empty($activity_data))
 		{
 			return $this->db->insert_batch('activities', $activity_data);
@@ -323,6 +331,7 @@ class Activity_model extends CI_Model {
             'receipient-full-name' => $activity_data['to_user_name'],
         );
 
+        // merge custom activity tags with predefined tags
         $other_tags = @unserialize($activity_data['other_activity_data']);
 
         if(!empty($other_tags))
@@ -330,12 +339,15 @@ class Activity_model extends CI_Model {
             $tags = array_merge($tags, $other_tags);
         }
 
+        // loop through each tag
+        // and replace them with the respective value
         foreach ($tags as $oldtext => $newtext) {
             $xoldtext = mb_ereg_replace(' ', '_', $oldtext);
             $xoldtext = '{'.strtolower($xoldtext).'}';
             $activity_text = mb_ereg_replace($xoldtext, $newtext, $activity_text);
         }
 
+        // trim the non-replaced tags
         $activity_text = preg_replace('~\{.*\}~' , '', $activity_text);
 
         return $activity_text;
