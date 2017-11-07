@@ -302,7 +302,7 @@ class Activity extends BaseController {
 		// check if form is valid
 		if($this->form_validation->run())
 		{
-			$add_user_activity = $this->Activity_model->add_user_activity($this->input->post('to_user_id'), $this->input->post('activity_type_slug'), $this->input->post('from_user_id'), $this->input->post('other_activity_data'));
+			$add_user_activity = $this->Activity_model->add_user_activity($this->input->post('to_user_id'), $this->input->post('activity_type_slug'), $this->input->post('from_user_id'), @unserialize($this->input->post('other_activity_data')));
 
 			// set the success / error flash message
 			if($add_user_activity == TRUE) 

@@ -12,7 +12,6 @@
 				<div class="col-md-6">
 					<label for="activityToUser">To user</label>
 					<select class="form-control" id="activityToUser" name="to_user_id">
-						<option value="0">All</option>
 						<?php foreach($users as $user): ?>
 							<option value="<?php echo $user['id']; ?>"><?php echo $user['full_name']; ?></option>
 						<?php endforeach; ?>
@@ -44,19 +43,10 @@
 			<?php echo form_error("activity_type_slug"); ?>
 		</div>
 		<div class="form-group">
-			<label for="activityText">Text</label>
-			<div class="jumbotron p-2 mb-3">
-				<p class="mb-1 lead">Available tags</p>
-				<span class="badge badge-dark p1">{sender-first-name}</span>
-				<span class="badge badge-dark p1">{sender-last-name}</span>
-				<span class="badge badge-dark p1">{sender-full-name}</span>
-				<span class="badge badge-dark p1">{receipient-first-name}</span>
-				<span class="badge badge-dark p1">{receipient-last-name}</span>
-				<span class="badge badge-dark p1">{receipient-full-name}</span>
-			</div>
-			<textarea class="form-control" name="text" id="activityText" aria-describedby="slugHelp" placeholder="Enter activity text / message"><?php echo $this->input->post('text'); ?></textarea>
-			<small id="textHelp" class="form-text text-muted">Type activity text using pre-defined tags or writing custom tags in the format <code>{custom-tag}</code> and sending it along with <code>other_activity_data</code> while calling the create activity function</small>
-			<?php echo form_error("text"); ?>
+			<label for="activityOtherData">Other Activity Data</label>
+			<textarea class="form-control" name="other_activity_data" id="activityOtherData" aria-describedby="otherDataHelp" placeholder="Enter activity text / message"><?php echo $this->input->post('other_activity_data'); ?></textarea>
+			<small id="otherDataHelp" class="form-text text-muted">Send serialized data built from custom tags array needed in the activity message</small>
+			<?php echo form_error("other_activity_data"); ?>
 		</div>
   		<button type="submit" class="btn btn-primary">Add</button>
   		<a href="<?php echo site_url('activity/manage'); ?>" class="btn btn-secondary">Back</a>

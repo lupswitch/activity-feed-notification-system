@@ -305,7 +305,7 @@ class Activity_model extends CI_Model {
             $activity_text = mb_ereg_replace($xoldtext, $newtext, $activity_text);
         }
 
-        $activity_text = mb_ereg_replace('{{([A-z0-9 _]*)}}', '', $activity_text);
+        $activity_text = preg_replace('~\{.*\}~' , '', $activity_text);
 
         return $activity_text;
     }
