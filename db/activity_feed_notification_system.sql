@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 06, 2017 at 10:18 AM
+-- Generation Time: Nov 07, 2017 at 11:49 AM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 5.6.30
 
@@ -39,7 +39,14 @@ CREATE TABLE IF NOT EXISTS `activities` (
   `added_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_on` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `activities`
+--
+
+INSERT INTO `activities` (`id`, `activity_type_id`, `from_user_id`, `to_user_id`, `other_activity_data`, `is_read`, `added_on`, `updated_on`) VALUES
+(1, 1, 0, 1, 'b:0;', 0, '2017-11-07 11:48:57', NULL);
 
 -- --------------------------------------------------------
 
@@ -54,7 +61,14 @@ CREATE TABLE IF NOT EXISTS `activity_types` (
   `text` text NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `activity_slug` (`slug`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `activity_types`
+--
+
+INSERT INTO `activity_types` (`id`, `slug`, `text`) VALUES
+(1, 'ACTIVITY_SETUP_COMPLETE', 'Activity feed notification system has been successfully setup');
 
 -- --------------------------------------------------------
 
@@ -68,7 +82,15 @@ CREATE TABLE IF NOT EXISTS `users` (
   `first_name` varchar(255) NOT NULL,
   `last_name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `first_name`, `last_name`) VALUES
+(1, 'User1', 'Example'),
+(2, 'User2', 'Example');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

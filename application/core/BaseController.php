@@ -24,7 +24,7 @@ class BaseController extends CI_Controller {
 
 		// this is the user id of logged in user
 		// change this value to the session user
-		$this->user_id = 2;
+		$this->user_id = 1;
 
 		// settings these values globally to avoid calling sames functions everywhere
 		// these values are being used in header view (common view)
