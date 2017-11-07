@@ -10,4 +10,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 * [Codeigniter 3.1.6](https://codeigniter.com/docs) - The web framework used
 * [Bootstrap 4](http://getbootstrap.com/docs/4.0/getting-started/download/) - Front-end CSS library
-* [mCustomScrollbar](http://manos.malihu.gr/jquery-custom-content-scroller/) - Custom scollbar for notification box
+* [mCustomScrollbar](http://manos.malihu.gr/jquery-custom-content-scroller/) - Custom scrollbar for notification box
+
+## Authors
+
+* **Yash Desai** - [yashdesai87](https://github.com/yashdesai87)
