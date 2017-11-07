@@ -288,9 +288,7 @@ class Activity extends BaseController {
 	public function add_user_activity()
 	{
 		// set validation rules
-		$this->form_validation->set_rules('to_user_id', 'To user', 'required|xss_clean');
 		$this->form_validation->set_rules('activity_type_slug', 'Activity slug', 'required|xss_clean');
-		$this->form_validation->set_rules('from_user_id', 'From user', 'required|xss_clean');
 		$this->form_validation->set_rules('other_activity_data', 'Other activity data', 'xss_clean');
 
 		// set error messages for form validation
@@ -302,7 +300,7 @@ class Activity extends BaseController {
 		// check if form is valid
 		if($this->form_validation->run())
 		{
-			$add_user_activity = $this->Activity_model->add_user_activity($this->input->post('to_user_id'), $this->input->post('activity_type_slug'), $this->input->post('from_user_id'), @unserialize($this->input->post('other_activity_data')));
+			$add_user_activity = $this->Activity_model->add_user_activity($this->user_id, $this->input->post('activity_type_slug'), 0, @unserialize($this->input->post('other_activity_data')));
 
 			// set the success / error flash message
 			if($add_user_activity == TRUE) 

@@ -27,31 +27,6 @@
 
 	<form method="post">
 		<div class="form-group">
-			<div class="form-row">
-				<div class="col-md-6">
-					<label for="activityToUser">To user</label>
-					<select class="form-control" id="activityToUser" name="to_user_id">
-						<?php foreach($users as $user): ?>
-							<option value="<?php echo $user['id']; ?>"><?php echo $user['full_name']; ?></option>
-						<?php endforeach; ?>
-					</select>
-					<small id="toUserHelp" class="form-text text-muted">Receiver should be a system user</small>
-					<?php echo form_error("to_user_id"); ?>
-				</div>
-				<div class="col-md-6">
-					<label for="activityFromUser">From user</label>
-					<select class="form-control" id="activityFromUser" name="from_user_id">
-						<option value="0">System</option>
-						<?php foreach($users as $user): ?>
-							<option value="<?php echo $user['id']; ?>"><?php echo $user['full_name']; ?></option>
-						<?php endforeach; ?>
-					</select>
-					<small id="fromUserHelp" class="form-text text-muted">Send as a system activity or as a user</small>
-					<?php echo form_error("from_user_id"); ?>
-				</div>
-			</div>
-		</div>
-		<div class="form-group">
 			<label for="activityToUser">Activity Slug</label>
 			<select class="form-control" id="activityTypeSlug" name="activity_type_slug">
 				<?php foreach($system_activities as $activity_type): ?>
@@ -62,7 +37,7 @@
 			<?php echo form_error("activity_type_slug"); ?>
 		</div>
 		<div class="form-group">
-			<label for="activityOtherData">Other Activity Data</label>
+			<label for="activityOtherData">Other Activity Data (Optional)</label>
 			<textarea class="form-control" name="other_activity_data" id="activityOtherData" aria-describedby="otherDataHelp" placeholder="Enter serialized data of custom tags for activity message"><?php echo $this->input->post('other_activity_data'); ?></textarea>
 			<small id="otherDataHelp" class="form-text text-muted">Send serialized data built from custom tags array needed in the activity message</small>
 			<?php echo form_error("other_activity_data"); ?>
