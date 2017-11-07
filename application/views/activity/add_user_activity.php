@@ -12,6 +12,7 @@
 				<div class="col-md-6">
 					<label for="activityToUser">To user</label>
 					<select class="form-control" id="activityToUser" name="to_user_id">
+						<option value="0">All</option>
 						<?php foreach($users as $user): ?>
 							<option value="<?php echo $user['id']; ?>"><?php echo $user['full_name']; ?></option>
 						<?php endforeach; ?>

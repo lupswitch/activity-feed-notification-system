@@ -35,7 +35,6 @@
                             </li>
                         </ul>
                     </div>
-                    <a href="<?php echo site_url('activity/manage'); ?>" class="btn btn-primary">Manage</a>
                 </div>
             </header>
             <main role="main">
