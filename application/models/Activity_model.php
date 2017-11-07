@@ -120,7 +120,7 @@ class Activity_model extends CI_Model {
 	 *         
 	 * @return  array (Returns data all the user activities)
 	 */
-    public function get_all_activities($user_id, $limit = 0, $offset = 0, $order_by = 'a.id', $params = array())
+    public function get_all_activities($user_id, $limit = 0, $offset = 0, $order_by = 'a.added_on DESC, a.id DESC', $params = array())
     {
         $limit_condition = "";
 
@@ -142,9 +142,9 @@ class Activity_model extends CI_Model {
         $sql = "
             SELECT
                 a.*,
-                u1.first_name as from_user_first_name,
-                u1.last_name as from_user_last_name,
-                CONCAT(u1.first_name,' ', u1.last_name) as from_user_name,
+                IFNULL(u1.first_name, 'System') as from_user_first_name,
+                IFNULL(u1.last_name, 'System') as from_user_last_name,
+                IFNULL(CONCAT(u1.first_name,' ', u1.last_name), 'System') as from_user_name,
                 u2.first_name as to_user_first_name,
                 u2.last_name as to_user_last_name,
                 CONCAT(u2.first_name,' ', u2.last_name) as to_user_name,
@@ -153,12 +153,12 @@ class Activity_model extends CI_Model {
                 activities a
                     LEFT JOIN users u1 ON a.from_user_id = u1.id
                     LEFT JOIN users u2 ON a.to_user_id = u2.id
-                    LEFT JOIN activity_types at ON a.activity_type_id = at.id
+                    INNER JOIN activity_types at ON a.activity_type_id = at.id
             WHERE
                 1 = 1
             AND 
                 u2.id = ?
-            $is_read_condition
+            	$is_read_condition
             ORDER BY
 	            $order_by
 	            $limit_condition
@@ -191,6 +191,7 @@ class Activity_model extends CI_Model {
             FROM
                 activities a
                     LEFT JOIN users u ON a.to_user_id = u.id
+                    INNER JOIN activity_types at ON a.activity_type_id = at.id
             WHERE
                 1 = 1
             AND 
@@ -214,6 +215,7 @@ class Activity_model extends CI_Model {
             FROM
                 activities a
                     LEFT JOIN users u ON a.to_user_id = u.id
+                    INNER JOIN activity_types at ON a.activity_type_id = at.id
             WHERE
                 1 = 1
             AND
@@ -223,6 +225,51 @@ class Activity_model extends CI_Model {
         ";
 
         return count($this->db->query($sql, array($user_id))->result_array());
+    }
+
+    /**
+	 * Add a new activity for user
+	 *
+	 * @param  integer $to_user_id (id of the user for whom activity is added)
+	 *         string $activity_type_slug (unique slug of the activity type)
+	 *         integer $from_user_id (id of the user who called the activity - 0 if the activity is performed by the system)
+	 *         array $other_activity_data (optional data containing custom tag values)
+	 *         
+	 * @return  boolean
+	 */
+	public function add_user_activity($to_user_id, $activity_type_slug, $from_user_id = 0, $other_activity_data = array())
+	{
+		$activity_type = $this->get_activity_type_by_params(array('slug' => $activity_type_slug));
+
+		if(empty($activity_type))
+		{
+			return FALSE;
+		}
+
+		$activity_data = array(
+			'to_user_id' => $to_user_id,
+			'activity_type_id' => $activity_type['id'],
+			'from_user_id' => $from_user_id,
+			'other_activity_data' => serialize($other_activity_data),
+			'added_on' => date('Y-m-d H:i:s')
+		);
+
+		return $this->db->insert('activities', $activity_data);
+	}
+
+	/**
+	 * Mark all unread activities for a user as read
+	 *
+	 * @param  integer $user_id (id of current user)
+	 * @return  boolean
+	 */
+	public function mark_all_activities_as_read($user_id)
+    {
+        $data = array(
+            'is_read' => 1
+        );
+        $this->db->where('to_user_id', $user_id);
+        return $this->db->update('activities', $data);
     }
 
     /**
@@ -261,21 +308,6 @@ class Activity_model extends CI_Model {
         $activity_text = mb_ereg_replace('{{([A-z0-9 _]*)}}', '', $activity_text);
 
         return $activity_text;
-    }
-
-	/**
-	 * Mark all unread activities for a user as read
-	 *
-	 * @param  integer $user_id (id of current user)
-	 * @return  boolean
-	 */
-	public function mark_all_activities_as_read($user_id)
-    {
-        $data = array(
-            'is_read' => 1
-        );
-        $this->db->where('to_user_id', $user_id);
-        return $this->db->update('activities', $data);
     }
 
 }

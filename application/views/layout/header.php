@@ -10,36 +10,32 @@
             <link rel="stylesheet" href="<?php echo base_url('resources/css/bootstrap.min.css'); ?>">
             <link rel="stylesheet" href="<?php echo base_url('resources/css/jquery.mCustomScrollbar.min.css'); ?>">
             <link rel="stylesheet" href="<?php echo base_url('resources/css/style.css'); ?>">
+            
+            <!-- set global javascript vars -->
+            <script>
+                var GLOBAL = {};
+                GLOBAL.site_url = "<?php echo site_url(); ?>"; // set project site url for use in ajax / get / post calls
+            </script>
         </head>
         <body>
             <header>
                 <div class="navbar navbar-dark navbar-expand bg-dark">
                     <div class="container d-flex justify-content-between">
                         <a href="<?php echo site_url(); ?>" class="navbar-brand">Activity Feed Notification System</a>
-                        <a href="<?php echo site_url('activity/manage'); ?>" class="btn btn-primary">Manage</a>
-                    </div>
-                    <ul class="navbar-nav">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 40px;">
-                              <img class="notification-ico" src="<?php echo base_url('resources/img/notification.svg'); ?>">
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right" id="notification-box">
-                                <div class="list-group">
-                                    <?php if(!empty($activities)): ?>
-                                        <?php foreach($activities as $activity) { ?>
-                                            <div class="list-group-item list-group-item-action flex-column align-items-start">
-                                                <p class="mb-1"><?php echo $activity['activity_text']; ?></p>
-                                                <small class="text-muted"><?php echo ago(strtotime($activity['added_on'])); ?></small>
-                                            </div>
-                                        <?php } ?>
-                                    <?php else: ?>
-                                        <div class="p-3">No new notifications!</div>
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a id="notification-btn" class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 40px;">
+                                    <img class="notification-ico" src="<?php echo base_url('resources/img/notification.svg'); ?>">
+                                    <?php if($unread_activities_count > 0): ?>
+                                        <span class="badge badge-danger unread-count"><?php echo ($unread_activities_count > NOTIFICATION_MAX_BADGE_COUNT) ? NOTIFICATION_MAX_BADGE_COUNT . "+" : $unread_activities_count; ?></span>
                                     <?php endif; ?>
-                                </div>
-                                <a class="list-group-item list-group-item-action text-center p-2" href="<?php echo site_url('activity/notifications'); ?>">View All (<?php echo $total_activities_count; ?>)</a>
-                            </div>
-                        </li>
-                    </ul>
+                                </a>
+                                <!-- Load separate view for notification box -->
+                                <?php $this->load->view('activity/_notification_box'); ?>
+                            </li>
+                        </ul>
+                    </div>
+                    <a href="<?php echo site_url('activity/manage'); ?>" class="btn btn-primary">Manage</a>
                 </div>
             </header>
             <main role="main">

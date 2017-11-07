@@ -4,6 +4,11 @@
 .notification-ico:hover {
     opacity: .85;
 }
+#notification-btn .unread-count {
+	position: absolute;
+    top: 0;
+    left: 20px;
+}
 #notification-box {
 	padding: 0;
     width: 400px;
